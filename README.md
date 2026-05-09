@@ -16,7 +16,6 @@
 
 <br/>
 
-<img src="https://niladri1.vercel.app/og-image.png" alt="Niladri Chatterjee Portfolio Preview" width="80%" style="border-radius: 12px;" />
 
 </div>
 
