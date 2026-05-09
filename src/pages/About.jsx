@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Code2, Briefcase, GraduationCap, Globe } from "lucide-react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
 import profileImg from "@/assets/profile/profile.jpg";
-import cvPdf from "@/assets/files/cv_pdf/Niladri_Chatterjee(CV).pdf";
+import cvPdf from "@/assets/files/cv_pdf/CV Jaya Pratama.pdf";
 
 const About = () => {
   const achievements = [
@@ -19,7 +19,7 @@ const About = () => {
     },
     {
       icon: <GraduationCap className="w-6 h-6" />,
-      title: "8.48 CGPA",
+      title: "3.75 GPA",
       description: "Academic excellence",
     },
   ];
@@ -46,7 +46,7 @@ const About = () => {
           <div className="aspect-square overflow-hidden rounded-2xl">
             <img
               src={profileImg}
-              alt="Niladri Chatterjee"
+              alt="Jayapratama"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />
           </div>
@@ -84,7 +84,7 @@ const About = () => {
                 {[
                   "Based in Kolkata, WB, India",
                   "B.Tech in Computer Science",
-                  "CGPA: 8.48",
+                  "GPA: 3.75/4.0",
                 ].map((fact) => (
                   <motion.li
                     key={fact}

@@ -12,17 +12,17 @@ import {
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import useSWR from "swr";
-import cvPdf from "@/assets/files/cv_pdf/Niladri_Chatterjee(CV).pdf";
+import cvPdf from "@/assets/files/cv_pdf/CV Jaya Pratama.pdf";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 const Home = () => {
   const [copied, setCopied] = useState(false);
-  const email = "code.niladri@gmail.com";
-  const whatsappNumber = "+916296554939";
+  const email = "jayapenting92@gmail.com";
+  const whatsappNumber = "+6288706497974";
 
   const { data: githubData } = useSWR(
-    "https://api.github.com/users/niladri-1",
+    "https://api.github.com/users/Jayy-develop",
     fetcher,
     {
       revalidateOnFocus: false,
@@ -68,7 +68,7 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          Niladri Chatterjee
+          Jaya Pratama
         </motion.h1>
         <motion.h1
           className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 relative tracking-tighter"
@@ -86,7 +86,7 @@ const Home = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           Software Developer specializing in Full Stack Development with
-          expertise in React.js, Node.js and modern Web Technologies.
+          expertise in Laravel and modern Web Technologies.
         </motion.p>
 
         <motion.div
@@ -150,7 +150,7 @@ const Home = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
         >
           <motion.a
-            href="https://github.com/niladri-1"
+            href="https://github.com/Jayy-develop"
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center group w-full"
@@ -176,7 +176,7 @@ const Home = () => {
           </motion.a>
 
           <motion.a
-            href="https://linkedin.com/in/niladri1"
+            href="https://linkedin.com/in/jayapratama"
             target="_blank"
             rel="noopener noreferrer"
             className="flex flex-col items-center group w-full"

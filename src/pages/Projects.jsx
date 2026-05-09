@@ -7,58 +7,21 @@ import project4 from "@/assets/projects_img/project-4.png";
 
 const projects = [
   {
-    title: "E-Mail Spam Detector",
+    title: "Digital Library System",
     description:
-      "AI-powered Gmail client that detects spam, summarises emails, and lets you chat with your inbox — built with React, Node.js & Gemini API.",
+      "A web-based application for managing and accessing digital library resources, built with Laravel and React.",
     image: project4,
-    github: "https://github.com/niladri-1/EMail-Spam-Detector",
-    live: "https://spam-detector1.vercel.app",
+    github: "https://github.com/Jayy-develop/Perpustakaan-Digital-Laravel",
+    live: "https://perpustakaan-digital-laravel-kelompok6.free.laravel.cloud/",
     tags: [
-      "MongoDB",
-      "Express",
+      "Laravel",
       "React",
       "Node",
       "JavaScript",
       "Gmail API",
-      "OAuth2",
     ],
   },
-  {
-    title: "Book Store",
-    description:
-      "A modern Book Management System built with the MERN stack (React 19 & Tailwind 4.0). Features secure JWT authentication, protected routes, and full CRUD functionality.",
-    image: project3,
-    github: "https://github.com/niladri-1/Bookstore-Auth-MERN",
-    live: "https://curd-auth-app.vercel.app",
-    tags: [
-      "MongoDB",
-      "Express",
-      "React",
-      "Node",
-      "Tailwind",
-      "JWT",
-      "Bcrypt",
-      "REST API",
-    ],
-  },
-  {
-    title: "NetScan-Pro",
-    description:
-      "Bash-based network scanning tool that provides live host discovery, port scanning, traceroute, and ping tests, featuring visually appealing ASCII banners and 80+ star at GitHub",
-    image: project2,
-    github: "https://github.com/niladri-1/NetScan-Pro",
-    live: "",
-    tags: ["Linux", "Bash", "Networking", "Monitoring", "NMAP", "Scripting"],
-  },
-  {
-    title: "Student Portfolio",
-    description:
-      "A professional portfolio template for engineering students. Easy to set up, fully customizable, and perfect for showcasing projects and skills.",
-    image: project1,
-    github: "https://github.com/niladri-1/Frontend-develope-portfolio",
-    live: "https://techfolio1.vercel.app",
-    tags: ["Next", "Tailwind CSS", "TypeScript", "ThreeJS", "Responsive"],
-  },
+  
 ];
 
 const Projects = () => {
