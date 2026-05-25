@@ -1,142 +1,185 @@
 import { motion } from 'framer-motion'
-import { GraduationCap, Calendar, MapPin, BookOpen, Award, FileText, ExternalLink } from 'lucide-react'
+import { GraduationCap, Calendar, MapPin, BookOpen, Award, FileText, ExternalLink, Sparkles } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { ScrollAnimation } from '@/components/ScrollAnimation'
-import collegeImg from '@/assets/education/college_img.jpg'
-import schoolImg from '@/assets/education/school_img.jpg'
-import bTechPdf from '@/assets/files/education_pdf/B Tech.pdf'
-import hsMarkSheetPdf from '@/assets/files/education_pdf/HS MARK SHEET.pdf'
+import { getEducation } from '@/services/portfolioApi'
 
 const Education = () => {
-  const educationData = [
-    {
-      school: 'Bengal College of Engineering and Technology',
-      location: 'Durgapur, WB, India',
-      duration: 'July 2020 - June 2024',
-      degree: 'B.Tech (Computer Science and Engineering)',
-      grade: 'CGPA: 8.48 (80%)',
-      image: collegeImg,
-      resultUrl: bTechPdf,
-      coursework: ["Software Development", 'DSA', 'OOPs', 'DBMS', 'AI', 'ML', 'OS', 'Networking'],
-      description:
-        'During my time at BCET, I have built a strong foundation in computer science, focusing on software development, problem-solving, and real-world applications. Engaging in hands-on projects, internships, and coding challenges has helped me enhance my technical and analytical skills.',
+  const [education, setEducation] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchEducation = async () => {
+      try {
+        const data = await getEducation()
+        setEducation(data || [])
+      } catch (error) {
+        console.error('Failed to fetch education:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchEducation()
+  }, [])
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
     },
-    {
-      school: 'Birsingha Bhagabati Vidyalaya (H.S)',
-      location: 'Medinipur, WB, India',
-      duration: 'June 2018 - July 2019',
-      degree: 'Higher Secondary (WBSC)',
-      grade: 'Percentage: 79%',
-      image: schoolImg,
-      resultUrl: hsMarkSheetPdf,
-      subjects: ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'Computer Science'],
-      description:
-        'My higher secondary education laid the foundation for my technical journey, strengthening my analytical thinking and problem-solving abilities. The strong emphasis on mathematics and computer science has been instrumental in shaping my passion for software development.',
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8 },
     },
-  ]
+  };
 
   return (
-    <div className="min-h-screen pt-20 px-4 max-w-6xl mx-auto pb-20">
+    <div className="min-h-screen pt-24 px-4 max-w-6xl mx-auto pb-20">
+      {/* Header */}
       <ScrollAnimation>
-        <motion.div
-          className="flex items-center gap-3 mb-12"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <GraduationCap className="w-8 h-8" />
-          <h2 className="text-4xl font-bold gradient-text">Education</h2>
-        </motion.div>
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-4">
+            <GraduationCap className="w-8 h-8 text-indigo-400" />
+            <h2 className="text-4xl font-bold gradient-text">Education</h2>
+          </div>
+          <p className="text-gray-400 text-lg max-w-3xl">
+            My academic journey and technical foundation built through rigorous coursework and hands-on learning.
+          </p>
+        </div>
       </ScrollAnimation>
 
-      <div className="space-y-12">
-        {educationData.map((edu, index) => (
-          <ScrollAnimation key={edu.school}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="relative bg-gray-800/50 rounded-xl overflow-hidden backdrop-blur-sm hover:bg-gray-800/70 transition-all"
-            >
-              <div className="absolute top-0 right-0 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-bl-xl flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-gray-300" />
-                <span className="text-gray-300">{edu.duration}</span>
-              </div>
+      {/* Education Cards */}
+      <motion.div
+        className="space-y-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {loading ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 text-lg">Loading education...</p>
+          </div>
+        ) : education.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 text-lg">No education records yet.</p>
+          </div>
+        ) : (
+          education.map((edu, index) => (
+            <ScrollAnimation key={edu.id}>
+              <motion.div
+                variants={itemVariants}
+                className="group relative bg-gradient-to-br from-gray-900/50 to-black/50 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10"
+              >
+                <div className="grid md:grid-cols-[1fr,350px]">
+                  {/* Left Column - Content */}
+                  <div className="p-6 md:p-8 flex flex-col justify-between">
+                    {/* Top Section */}
+                    <div>
+                      {/* Header */}
+                      <div className="flex items-start gap-4 mb-6">
+                        <div className="p-3 rounded-lg bg-gradient-to-br from-indigo-500/20 to-blue-500/20 group-hover:from-indigo-500/40 group-hover:to-blue-500/40 transition-all duration-300 flex-shrink-0">
+                          <BookOpen className="w-6 h-6 text-indigo-400" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold mb-1 text-white group-hover:text-indigo-300 transition-colors">
+                            {edu.title}
+                          </h3>
+                          <p className="text-indigo-400 font-semibold">{edu.institution}</p>
+                        </div>
+                      </div>
 
-              <div className="grid md:grid-cols-[350px,1fr]">
-                {/* Left Column - Image */}
-                <div className="relative h-96 md:h-full">
-                  <img
-                    src={edu.image}
-                    alt={edu.school}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end">
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold mb-2">{edu.school}</h3>
-                      <div className="flex items-center gap-2 text-gray-300 mb-1">
-                        <MapPin className="w-4 h-4" />
-                        <span>{edu.location}</span>
+                      {/* Meta Information */}
+                      <div className="flex flex-wrap gap-4 mb-6 pb-6 border-b border-white/10">
+                        {edu.duration && (
+                          <div className="flex items-center gap-2 text-gray-300">
+                            <Calendar className="w-4 h-4 text-gray-500" />
+                            <span className="text-sm">{edu.duration}</span>
+                          </div>
+                        )}
                       </div>
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <Award className="w-4 h-4" />
-                        <span>{edu.grade}</span>
-                      </div>
+
+                      {/* Description */}
+                      {edu.description && (
+                        <p className="text-gray-300 leading-relaxed mb-6">
+                          {edu.description}
+                        </p>
+                      )}
+
+                      {/* Achievement */}
+                      {edu.achievement && (
+                        <div className="mb-6">
+                          <p className="text-sm font-semibold text-gray-200 mb-3">Achievement</p>
+                          <p className="text-gray-300 text-sm">{edu.achievement}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
 
-                {/* Right Column - Content */}
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <BookOpen className="w-5 h-5 text-gray-400" />
-                    <h4 className="text-lg font-semibold">{edu.degree}</h4>
-                  </div>
-
-                  <div className="flex items-start gap-2 text-gray-300 mb-6">
-                    <FileText className="w-5 h-5 mt-1 flex-shrink-0" />
-                    <p className="text-sm leading-relaxed">{edu.description}</p>
-                  </div>
-
-                  {edu.coursework && (
-                    <div className="mb-6">
-                      <div className="flex flex-wrap gap-2">
-                        {edu.coursework.map((course) => (
-                          <span key={course} className="px-3 py-1 bg-white/10 rounded-full text-sm">
-                            {course}
-                          </span>
-                        ))}
-                      </div>
+                  {/* Right Column - Image */}
+                  {edu.image && (
+                    <div className="hidden md:block relative h-96 overflow-hidden bg-gradient-to-br from-indigo-500/20 to-blue-500/20">
+                      <img
+                        src={edu.image}
+                        alt={edu.institution}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
                     </div>
                   )}
-
-                  {edu.subjects && (
-                    <div className="mb-6">
-                      <div className="flex flex-wrap gap-2">
-                        {edu.subjects.map((subject) => (
-                          <span key={subject} className="px-3 py-1 bg-white/10 rounded-full text-sm">
-                            {subject}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <motion.a
-                    href={edu.resultUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-all text-sm font-medium"
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    View Result
-                    <ExternalLink className="w-4 h-4" />
-                  </motion.a>
                 </div>
+
+                {/* Hover Glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                </div>
+              </motion.div>
+            </ScrollAnimation>
+          ))
+        )}
+      </motion.div>
+
+      {/* Stats */}
+      {!loading && education.length > 0 && (
+        <ScrollAnimation>
+          <motion.div
+            className="mt-20 pt-20 border-t border-white/10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              <div>
+                <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text mb-2">
+                  {education.length}
+                </div>
+              <p className="text-gray-400">Educational Institutions</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text mb-2">
+                4+
               </div>
-            </motion.div>
-          </ScrollAnimation>
-        ))}
-      </div>
+              <p className="text-gray-400">Years of Study</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text mb-2">
+                100%
+              </div>
+              <p className="text-gray-400">Academic Excellence</p>
+            </div>
+          </div>
+        </motion.div>
+      </ScrollAnimation>
+      )}
     </div>
   )
 }

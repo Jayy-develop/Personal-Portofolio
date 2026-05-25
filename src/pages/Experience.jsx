@@ -4,161 +4,215 @@ import {
   MapPin,
   Building2,
   ExternalLink,
-  ArrowRight,
+  Calendar,
+  Award,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
-import codeAlphaImg from "@/assets/experience/codeAlpha_page.jpg";
-import bharatInternImg from "@/assets/experience/bharatIntern_page.jpg";
-import codeClauseImg from "@/assets/experience/codeClause_page.jpg";
-import oasisInfobyteImg from "@/assets/experience/oasisInfobyte_page.jpg";
-import codeAlphaPdf from "@/assets/files/experience_pdf/codeAlpha.pdf";
-import bharatInternPdf from "@/assets/files/experience_pdf/bharatIntern.pdf";
-import codeClausePdf from "@/assets/files/experience_pdf/codeClause.pdf";
-import oasisInfobytePdf from "@/assets/files/experience_pdf/oasisInfobyte.pdf";
-
-const experiences = [
-  {
-    title: "Software Engineering Intern",
-    company: "Code Alpha",
-    location: "Remote",
-    period: "Jun 2024 - Aug 2024",
-    type: "Internship",
-    image: codeAlphaImg,
-    certificateUrl: codeAlphaPdf,
-    description: [
-      "Optimized web application performance with JavaScript and React.js, achieving a 98% error-free rate",
-      "Implemented advanced features on a React.js platform, resulting in a 40% surge in user interaction",
-    ],
-  },
-  {
-    title: "Full Stack Development Intern",
-    company: "Bharat Intern",
-    location: "Remote",
-    period: "Jun 2024 - Jul 2024",
-    type: "Internship",
-    image: bharatInternImg,
-    certificateUrl: bharatInternPdf,
-    description: [
-      "Designed 3 websites with CSS, JavaScript, React.js, Node.js and MongoDB, resulting in a 30% increase in user engagement",
-      "Built a money tracker app using HTML, CSS, React.js, Node.js, and MongoDB, improving user financial tracking by 25%",
-    ],
-  },
-  {
-    title: "Web Applications Intern",
-    company: "CodeClause",
-    location: "Remote",
-    period: "Jun 2023 - Jul 2023",
-    type: "Internship",
-    image: codeClauseImg,
-    certificateUrl: codeClausePdf,
-    description: [
-      "Engineered a real-time collaborative document editor using Next.js, TypeScript, and Liveblocks, reducing latency by 30%",
-      "Implemented and optimized a personal portfolio with Next.js and Tailwind CSS, improving performance by 40%",
-    ],
-  },
-  {
-    title: "Junior Web Developer",
-    company: "Oasis Infobyte",
-    location: "Remote",
-    period: "Jun 2023 - Jul 2023",
-    type: "Internship",
-    image: oasisInfobyteImg,
-    certificateUrl: oasisInfobytePdf,
-    description: [
-      "Engineered a real-time collaborative document editor using Next.js, TypeScript, and Liveblocks, reducing latency by 30%",
-      "Implemented and optimized a personal portfolio with Next.js and Tailwind CSS, improving performance by 40%",
-    ],
-  },
-];
+import { getExperience } from "@/services/portfolioApi";
 
 const Experience = () => {
+  const [experience, setExperience] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchExperience = async () => {
+      try {
+        const data = await getExperience();
+        setExperience(data || []);
+      } catch (error) {
+        console.error('Failed to fetch experience:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchExperience();
+  }, []);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8 },
+    },
+  };
+
   return (
-    <div className="min-h-screen pt-16 sm:pt-20 px-4 max-w-5xl mx-auto pb-16 sm:pb-20">
+    <div className="min-h-screen pt-24 px-4 max-w-5xl mx-auto pb-20">
       <ScrollAnimation>
-        <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 gradient-text flex items-center gap-3">
-          <Briefcase className="w-7 h-7 sm:w-8 sm:h-8" />
-          Professional Experience
-        </h2>
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-4">
+            <Briefcase className="w-8 h-8 text-emerald-400" />
+            <h2 className="text-4xl font-bold gradient-text">Professional Experience</h2>
+          </div>
+          <p className="text-gray-400 text-lg max-w-3xl">
+            My journey in tech through internships and professional roles, where I developed real-world skills and delivered impactful solutions.
+          </p>
+        </div>
       </ScrollAnimation>
 
-      <div className="space-y-8 sm:space-y-12">
-        {experiences.map((exp) => (
-          <ScrollAnimation key={exp.title}>
-            <div className="group relative bg-gray-800/50 rounded-xl sm:rounded-2xl overflow-hidden backdrop-blur-sm hover:bg-gray-800/70 transition-all border border-white/5">
-              <div className="grid grid-cols-1 md:grid-cols-[1fr,300px]">
-                <div className="p-6 sm:p-8">
-                  <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                    <div className="p-2 sm:p-3 bg-white/10 rounded-lg sm:rounded-xl group-hover:bg-white/20 transition-colors">
-                      <Building2 className="w-6 h-6 sm:w-7 sm:h-7" />
+      <motion.div
+        className="space-y-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {loading ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 text-lg">Loading experience...</p>
+          </div>
+        ) : experience.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 text-lg">No experience records yet.</p>
+          </div>
+        ) : (
+          experience.map((exp, index) => (
+            <ScrollAnimation key={exp.id}>
+              <motion.div
+                variants={itemVariants}
+                className="group relative bg-gradient-to-br from-gray-900/50 to-black/50 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/10"
+              >
+                <div className="grid md:grid-cols-[1fr,300px]">
+                  {/* Left Content */}
+                  <div className="p-6 md:p-8">
+                    {/* Header */}
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="p-3 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/20 group-hover:from-emerald-500/40 group-hover:to-teal-500/40 transition-all duration-300 flex-shrink-0">
+                      <Building2 className="w-6 h-6 text-emerald-400" />
                     </div>
-                    <div>
-                      <h3 className="text-xl sm:text-2xl font-bold mb-1">
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold mb-1 text-white group-hover:text-emerald-300 transition-colors">
                         {exp.title}
                       </h3>
-                      <p className="text-gray-400 text-base sm:text-lg">
-                        {exp.company}
-                      </p>
+                      <p className="text-emerald-400 font-semibold">{exp.company}</p>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
-                    <MapPin className="w-4 h-4" />
-                    <span>{exp.location}</span>
-                    <span>•</span>
-                    <span>{exp.period}</span>
+                  {/* Meta Information */}
+                  <div className="flex flex-wrap gap-4 mb-6 pb-6 border-b border-white/10">
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <MapPin className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm">{exp.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <Calendar className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm">{exp.period}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <Award className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm font-medium text-emerald-400">{exp.type}</span>
+                    </div>
                   </div>
 
-                  <ul className="space-y-3 sm:space-y-4">
-                    {exp.description.map((item, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-3 text-gray-300 text-sm sm:text-base"
+                  {/* Description */}
+                  <div className="space-y-3 mb-6">
+                    {(Array.isArray(exp.description) ? exp.description : (exp.description || '').split('\n').filter(Boolean)).map((point, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.1 }}
+                        className="flex gap-3 text-gray-300"
                       >
-                        <ArrowRight className="w-5 h-5 mt-0.5 text-gray-400 flex-shrink-0" />
-                        <span className="leading-relaxed">{item}</span>
-                      </li>
+                        <span className="text-emerald-400 mt-1">→</span>
+                        <p className="leading-relaxed">{point}</p>
+                      </motion.div>
                     ))}
-                  </ul>
+                  </div>
 
-                  <motion.a
-                    href={exp.certificateUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="md:hidden mt-6 inline-flex items-center gap-2 px-6 py-2.5 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg transition-all duration-300 text-sm font-medium"
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    View Certificate
-                    <ExternalLink className="w-4 h-4" />
-                  </motion.a>
+                  {/* Skills */}
+                  <div className="flex flex-wrap gap-2">
+                    {(Array.isArray(exp.skills) ? exp.skills : (exp.skills || '').split(',').map(s => s.trim()).filter(Boolean)).map((skill, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 text-xs font-medium bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-500/30 hover:border-emerald-500/50 transition-colors"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="relative hidden md:block">
-                  <div className="absolute inset-0 group-hover:scale-105 transition-transform duration-500">
+                {/* Right Image Section */}
+                {exp.image && (
+                  <div className="hidden md:block relative h-80 overflow-hidden bg-gradient-to-br from-emerald-500/20 to-teal-500/20">
                     <img
                       src={exp.image}
                       alt={exp.company}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-gray-800/80 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+                    {exp.certificateUrl && (
+                      <a
+                        href={exp.certificateUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute bottom-4 right-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all duration-300 group/cert"
+                      >
+                        <span>Certificate</span>
+                        <ExternalLink className="w-4 h-4 group-hover/cert:scale-110 transition-transform" />
+                      </a>
+                    )}
                   </div>
-                  <div className="relative h-full flex items-center justify-center">
-                    <motion.a
-                      href={exp.certificateUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-8 py-3 text-white font-bold bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-xl flex items-center gap-2 transition-all duration-300 hover:scale-105 border border-white/10 hover:border-white/20"
-                      whileHover={{ y: -5 }}
-                    >
-                      View Certificate
-                      <ExternalLink className="w-4 h-4" />
-                    </motion.a>
-                  </div>
-                </div>
+                )}
               </div>
-            </div>
+
+              {/* Hover Glow */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2"></div>
+              </div>
+            </motion.div>
           </ScrollAnimation>
-        ))}
-      </div>
+        ))
+        )}
+      </motion.div>
+
+      {/* Stats */}
+      <ScrollAnimation>
+        <motion.div
+          className="mt-20 pt-20 border-t border-white/10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text mb-2">
+                {experience.length}
+              </div>
+              <p className="text-gray-400">Internships & Roles</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text mb-2">
+                {experience.reduce((acc, exp) => {
+                  const months = exp.duration?.split(' ')[0];
+                  return acc + parseInt(months || 0);
+                }, 0)}+
+              </div>
+              <p className="text-gray-400">Months Experienced</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text mb-2">
+                100%
+              </div>
+              <p className="text-gray-400">Success Rate</p>
+            </div>
+          </div>
+        </motion.div>
+      </ScrollAnimation>
     </div>
   );
 };

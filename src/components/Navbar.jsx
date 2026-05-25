@@ -1,12 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Code2, Menu, X } from 'lucide-react'
 import SearchDialog from './SearchDialog'
+import { getAbout } from '@/services/portfolioApi'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [profile, setProfile] = useState({ name: 'Jaya Pratama' })
   const location = useLocation()
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getAbout()
+        if (data?.name) {
+          setProfile(data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile:', error)
+      }
+    }
+    fetchProfile()
+  }, [])
 
   const navLinks = [
     { path: '/', label: 'Home' },
@@ -19,6 +35,8 @@ const Navbar = () => {
     { path: '/contact', label: 'Contact' },
   ]
 
+  const isActive = (path) => location.pathname === path
+
   return (
     <motion.nav
       className="fixed top-0 w-full z-50"
@@ -27,25 +45,37 @@ const Navbar = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="relative">
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-transparent backdrop-blur-xl" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3">
-              <Code2 className="w-8 h-8 text-white" aria-hidden="true" />
-              <span className="text-xl font-bold text-white">Niladri</span>
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 group hover:opacity-80 transition-opacity"
+              aria-label="Jaya Pratama - Home"
+            >
+              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 group-hover:shadow-lg transition-shadow">
+                <Code2 className="w-6 h-6 text-white" aria-hidden="true" />
+              </div>
+              <span className="text-lg font-bold text-white hidden sm:inline">
+                {profile?.name?.split(' ')[0] || 'Jaya'}
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="hidden md:flex items-center space-x-1">
               <SearchDialog />
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`nav-link ${location.pathname === link.path ? 'bg-white/15 backdrop-blur-sm' : ''}`}
-                  aria-current={location.pathname === link.path ? 'page' : undefined}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    isActive(link.path)
+                      ? 'bg-white/20 text-white backdrop-blur-sm'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
+                  aria-current={isActive(link.path) ? 'page' : undefined}
                 >
                   {link.label}
                 </Link>
@@ -74,23 +104,23 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <motion.div
-            className="md:hidden absolute top-full left-0 right-0 bg-black/50 backdrop-blur-xl"
+            className="md:hidden absolute top-full left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="px-4 pt-2 pb-3 space-y-1">
+            <div className="px-4 pt-2 pb-4 space-y-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`block px-3 py-2 text-gray-400 hover:text-white transition-colors ${
-                    location.pathname === link.path
-                      ? 'bg-white/10 backdrop-blur-sm text-white'
-                      : ''
+                  className={`block px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    isActive(link.path)
+                      ? 'bg-white/20 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-white/10'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
-                  aria-current={location.pathname === link.path ? 'page' : undefined}
+                  aria-current={isActive(link.path) ? 'page' : undefined}
                 >
                   {link.label}
                 </Link>

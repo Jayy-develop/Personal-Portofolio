@@ -1,161 +1,251 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Code2, Briefcase, GraduationCap, Globe } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Code2, Briefcase, GraduationCap, Globe, Sparkles, ArrowRight } from "lucide-react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
-import profileImg from "@/assets/profile/profile.jpg";
+import { getAbout } from "@/services/portfolioApi";
+import profileImg from "@/assets/profile/Fotojaya.jpeg";
 import cvPdf from "@/assets/files/cv_pdf/CV Jaya Pratama.pdf";
 
 const About = () => {
+  const [about, setAbout] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const data = await getAbout();
+        setAbout(data || {});
+      } catch (error) {
+        console.error('Failed to fetch about:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAbout();
+  }, []);
+
   const achievements = [
     {
       icon: <Code2 className="w-6 h-6" />,
-      title: "10+ Projects",
-      description: "Completed full-stack web applications",
+      title: "15+",
+      description: "Projects Completed",
     },
     {
       icon: <Briefcase className="w-6 h-6" />,
-      title: "3+ Internships",
-      description: "Professional work experience",
+      title: "3+",
+      description: "Years Experience",
     },
     {
       icon: <GraduationCap className="w-6 h-6" />,
-      title: "3.75 GPA",
-      description: "Academic excellence",
+      title: "10+",
+      description: "Certifications",
     },
   ];
 
   const interests = [
     "Web Development",
-    "UI/UX Design",
+    "Full Stack Architecture",
     "Cloud Computing",
-    "DevOps",
+    "DevOps & Automation",
     "Open Source",
-    "Artificial Intelligence",
+    "AI/ML Applications",
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen pt-20 px-4 max-w-4xl mx-auto pb-20">
+    <div className="min-h-screen pt-24 px-4 max-w-5xl mx-auto pb-20">
+      {/* Header */}
       <ScrollAnimation>
-        <motion.h2 className="text-4xl font-bold mb-8 gradient-text">
-          About Me
-        </motion.h2>
+        <div className="mb-16">
+          <h2 className="text-4xl font-bold mb-4 gradient-text">About Me</h2>
+          <p className="text-gray-400 text-lg">
+            A passionate developer building the future, one line of code at a time.
+          </p>
+        </div>
       </ScrollAnimation>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-12 mb-20">
+        {/* Left Column - Image */}
         <ScrollAnimation>
-          <div className="aspect-square overflow-hidden rounded-2xl">
-            <img
-              src={profileImg}
-              alt="Jayapratama"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-            />
-          </div>
+          <motion.div
+            className="relative group"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-lg opacity-25 group-hover:opacity-50 transition-opacity duration-300"></div>
+            <div className="relative aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm">
+              <img
+                src={profileImg}
+                alt="Profile"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+          </motion.div>
         </ScrollAnimation>
 
-        <ScrollAnimation className="space-y-6">
-          <div className="space-y-4">
-            <p className="text-gray-300 leading-relaxed">
-              Hi! I'm a passionate full-stack developer with expertise in
-              building modern web applications. My journey in tech started
-              during my college years, where I discovered my love for creating
-              innovative solutions through code.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              I completed my B.Tech in Computer Science, maintaining a strong
-              academic record while actively engaging in real-world projects and
-              internships. This blend of theoretical knowledge and practical
-              experience has shaped my approach to problem-solving and software
-              development.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              I specialize in React, Node.js, and modern web technologies, with
-              a keen interest in creating performant and user-friendly
-              applications. My experience includes working with various startups
-              and contributing to open-source projects.
-            </p>
-          </div>
-
-          <ScrollAnimation>
-            <div className="pt-4">
-              <h3 className="text-2xl font-semibold mb-4 gradient-text">
-                Quick Facts
-              </h3>
-              <ul className="list-none space-y-3">
-                {[
-                  "Based in Kolkata, WB, India",
-                  "B.Tech in Computer Science",
-                  "GPA: 3.75/4.0",
-                ].map((fact) => (
-                  <motion.li
-                    key={fact}
-                    className="flex items-center space-x-2 text-gray-300"
-                  >
-                    <span className="w-2 h-2 bg-white rounded-full" />
-                    <span>{fact}</span>
-                  </motion.li>
-                ))}
-              </ul>
+        {/* Right Column - Content */}
+        <ScrollAnimation>
+          <motion.div
+            className="space-y-6"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {/* Bio */}
+            <div className="space-y-4">
+              <p className="text-gray-300 leading-relaxed text-lg">
+                {loading ? 'Loading about...' : (about.bio_long || about.bio_short || 'A passionate developer building the future, one line of code at a time.')}
+              </p>
             </div>
-          </ScrollAnimation>
 
-          <ScrollAnimation>
-            <div className="flex justify-start space-x-4">
+            {/* Quick Facts */}
+            <div className="space-y-3 py-6 border-t border-b border-white/10">
+              <h3 className="text-lg font-semibold mb-4">Quick Facts</h3>
+              <div className="space-y-2">
+                {[
+                  { label: "Location", value: about.location || '—' },
+                  { label: "Timezone", value: about.timezone || '—' },
+                  { label: "Email", value: about.email ? `${about.email.split('@')[0]}...` : '—' },
+                  { label: "Phone", value: about.phone || '—' },
+                ].map((fact, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="flex justify-between items-center py-1"
+                  >
+                    <span className="text-gray-400">{fact.label}</span>
+                    <span className="text-white font-medium">{fact.value}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="flex gap-3 pt-4">
               <a
                 href={cvPdf}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 bg-white text-black rounded-full font-medium hover:bg-gray-100 transition-colors"
+                download
+                className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50 group"
               >
-                Download CV
+                <span>Download CV</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
               <Link
-                to="/skills"
-                className="px-6 py-3 bg-white/10 text-white rounded-full font-medium hover:bg-white/20 transition-colors"
+                to="/contact"
+                className="flex items-center gap-2 px-6 py-3 rounded-lg border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 text-white font-semibold transition-all duration-300 group"
               >
-                My Skills
+                <span>Get in Touch</span>
               </Link>
             </div>
-          </ScrollAnimation>
+          </motion.div>
         </ScrollAnimation>
       </div>
 
+      {/* Achievements */}
       <ScrollAnimation>
-        <div className="mt-16">
-          <h3 className="text-2xl font-semibold mb-8 gradient-text">
-            Achievements
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            {achievements.map((achievement) => (
-              <ScrollAnimation key={achievement.title}>
-                <div className="bg-white/5 p-6 rounded-xl backdrop-blur-sm">
-                  <div className="text-white mb-4">{achievement.icon}</div>
-                  <h4 className="text-xl font-semibold mb-2">
-                    {achievement.title}
-                  </h4>
-                  <p className="text-gray-400">{achievement.description}</p>
+        <div className="mb-20">
+          <h3 className="text-2xl font-bold mb-8">Key Achievements</h3>
+          <motion.div
+            className="grid md:grid-cols-3 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {achievements.map((achievement, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="group relative bg-gradient-to-br from-gray-900/50 to-black/50 rounded-xl p-8 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 text-center"
+              >
+                <div className="flex justify-center mb-4 text-blue-400 group-hover:scale-110 transition-transform">
+                  {achievement.icon}
                 </div>
-              </ScrollAnimation>
+                <p className="text-3xl font-bold gradient-text mb-2">
+                  {achievement.title}
+                </p>
+                <p className="text-gray-400">{achievement.description}</p>
+
+                {/* Hover Glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </ScrollAnimation>
 
+      {/* Interests */}
       <ScrollAnimation>
-        <div className="mt-16">
-          <h3 className="text-2xl font-semibold mb-8 gradient-text">
-            Areas of Interest
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {interests.map((interest) => (
-              <ScrollAnimation key={interest}>
-                <div className="bg-white/5 p-4 rounded-xl backdrop-blur-sm flex items-center gap-3">
-                  <Globe className="w-5 h-5 text-gray-400" />
-                  <span className="text-gray-300">{interest}</span>
-                </div>
-              </ScrollAnimation>
+        <div className="mb-20">
+          <h3 className="text-2xl font-bold mb-8">Interests & Passions</h3>
+          <motion.div
+            className="grid md:grid-cols-2 gap-4"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {interests.map((interest, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+                className="flex items-center gap-3 p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
+              >
+                <Sparkles className="w-5 h-5 text-purple-400 group-hover:scale-110 transition-transform" />
+                <span className="text-gray-300 group-hover:text-white transition-colors font-medium">
+                  {interest}
+                </span>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
+      </ScrollAnimation>
+
+      {/* Call to Action */}
+      <ScrollAnimation>
+        <motion.div
+          className="text-center py-12 border-t border-white/10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h3 className="text-2xl font-bold mb-4">Ready to Work Together?</h3>
+          <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+            I'm always interested in hearing about new projects and opportunities. Feel free to reach out if you'd like to collaborate!
+          </p>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50 group"
+          >
+            <span>Let's Connect</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
       </ScrollAnimation>
     </div>
   );

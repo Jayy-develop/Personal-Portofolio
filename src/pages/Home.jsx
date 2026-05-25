@@ -1,47 +1,33 @@
-import { VercelLogo } from "@/components/TechLogos";
 import { motion } from "framer-motion";
-import {
-  Github,
-  Linkedin,
-  MessageCircle,
-  Copy,
-  Check,
-  FileDown,
-  User,
-} from "lucide-react";
+import { Github, Linkedin, Mail, Copy, Check, FileDown, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import useSWR from "swr";
+import { useState, useEffect } from "react";
+import { getAbout } from "@/services/portfolioApi";
 import cvPdf from "@/assets/files/cv_pdf/CV Jaya Pratama.pdf";
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
 
 const Home = () => {
   const [copied, setCopied] = useState(false);
-  const email = "jayapenting92@gmail.com";
-  const whatsappNumber = "+6288706497974";
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const { data: githubData } = useSWR(
-    "https://api.github.com/users/Jayy-develop",
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      dedupingInterval: 60000,
-      shouldRetryOnError: true,
-      errorRetryCount: 3,
-    },
-  );
-
-  function formatRepoCount(count) {
-    if (count < 5) return count.toString();
-    return `${Math.floor(count / 5) * 5}+`;
-  }
-
-  const githubRepos = githubData?.public_repos || 0;
-  const displayRepos = formatRepoCount(githubRepos);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getAbout();
+        setProfile(data);
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProfile();
+  }, []);
 
   const copyToClipboard = async () => {
     try {
+      const email = profile?.email || 'jayapenting92@gmail.com';
       await navigator.clipboard.writeText(email);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -50,180 +36,197 @@ const Home = () => {
     }
   };
 
-  const handleEmailClick = (e) => {
-    if (window.innerWidth <= 640) {
-      window.location.href = `mailto:${email}`;
-      e.preventDefault();
-    } else {
-      copyToClipboard();
-    }
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 mt-7 sm:mt-0 md:mt-3 lg:mt-5">
-      <div className="text-center relative z-10 max-w-4xl mx-auto">
-        <motion.h1
-          className="text-4xl sm:text-6xl md:text-8xl font-bold mb-4 sm:mb-6 relative tracking-tighter"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+    <div className="min-h-screen flex items-center justify-center px-4 pt-20 pb-20">
+      <motion.div
+        className="text-center relative z-10 max-w-4xl mx-auto"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Animated Badge */}
+        <motion.div
+          variants={itemVariants}
+          className="mb-6 inline-block"
         >
-          Jaya Pratama
-        </motion.h1>
+          <div className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 backdrop-blur-sm">
+            <span className="text-sm font-medium bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              ✨ Welcome to my portfolio
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Main Heading */}
         <motion.h1
-          className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 relative tracking-tighter"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          variants={itemVariants}
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 sm:mb-8 relative tracking-tighter"
         >
-          I design & code for web
+          <span className="bg-gradient-to-b from-white via-white to-gray-400 bg-clip-text text-transparent">
+            {profile?.name || loading ? (loading ? 'Loading...' : 'Jaya Pratama') : profile?.name}
+          </span>
         </motion.h1>
 
-        <motion.p
-          className="text-lg sm:text-xl md:text-2xl text-gray-400 mb-4 sm:mb-5 max-w-2xl mx-auto px-2 sm:px-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+        {/* Subheading */}
+        <motion.h2
+          variants={itemVariants}
+          className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4 sm:mb-6 text-gray-300"
         >
-          Software Developer specializing in Full Stack Development with
-          expertise in Laravel and modern Web Technologies.
+          {profile?.title || 'Full Stack Developer'} & Software Engineer
+        </motion.h2>
+
+        {/* Description */}
+        <motion.p
+          variants={itemVariants}
+          className="text-base sm:text-lg md:text-xl text-gray-400 mb-6 sm:mb-8 max-w-2xl mx-auto px-2 sm:px-4 leading-relaxed"
+        >
+          {profile?.bio || 'Full Stack Developer crafting modern web applications with React, Node.js, and cutting-edge technologies.'}
         </motion.p>
 
+        {/* Location & Role */}
         <motion.div
-          className="flex flex-col items-center gap-4 sm:gap-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          variants={itemVariants}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 sm:mb-12 text-gray-300 text-sm"
         >
-          <div className="flex justify-center space-x-3 sm:space-x-4">
+          <span className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+            Based in {profile?.location || 'Indonesia'}
+          </span>
+          <span className="hidden sm:block text-gray-600">•</span>
+          <span>{profile?.timezone || 'WIB (UTC+7)'}</span>
+        </motion.div>
+
+        {/* CTA Buttons */}
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+        >
+          <button
+            onClick={copyToClipboard}
+            className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50 group"
+            aria-label="Copy email address"
+          >
+            {copied ? (
+              <>
+                <Check className="w-5 h-5" />
+                <span>Copied!</span>
+              </>
+            ) : (
+              <>
+                <Mail className="w-5 h-5" />
+                <span>Get in Touch</span>
+              </>
+            )}
+          </button>
+
+          <a
+            href={cvPdf}
+            download
+            className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-lg border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 text-white font-semibold transition-all duration-300 group"
+            aria-label="Download CV"
+          >
+            <FileDown className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <span>Download CV</span>
+          </a>
+        </motion.div>
+
+        {/* Social Links */}
+        <motion.div
+          variants={itemVariants}
+          className="flex justify-center gap-4 mb-16"
+        >
+          {profile?.socialLinks?.github && (
             <a
-              href={cvPdf}
+              href={profile.socialLinks.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white text-black rounded-full text-sm sm:text-base font-medium hover:bg-gray-100 transition-colors flex items-center gap-2"
+              className="p-3 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-all duration-300 group hover:shadow-lg"
+              aria-label="GitHub"
             >
-              <FileDown className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
-              Download CV
+              <Github className="w-6 h-6 group-hover:scale-110 transition-transform" />
             </a>
-            <Link
-              to="/about"
-              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white/10 text-white rounded-full text-sm sm:text-base font-medium hover:bg-white/20 transition-colors flex items-center gap-2"
+          )}
+          {profile?.socialLinks?.linkedin && (
+            <a
+              href={profile.socialLinks.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-all duration-300 group hover:shadow-lg"
+              aria-label="LinkedIn"
             >
-              <User className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
-              About Me
-            </Link>
-          </div>
-
-          <button
-            onClick={handleEmailClick}
-            className="group relative flex items-center gap-2 py-2 pl-8 pr-4 hover:bg-transparent transition-all cursor-copy sm:cursor-pointer"
-            aria-label={`Email: ${email}`}
-          >
-            <div className="absolute left-0 flex items-center">
-              <div className="w-3 text-gray-500 group-hover:text-white transition-colors">
-                <VercelLogo />
-              </div>
-              <span className="text-lg font-mono text-gray-400 ml-3 group-hover:text-white transition-colors">
-                ~
-              </span>
-            </div>
-            <span className="text-gray-400 group-hover:text-white transition-colors ml-4 sm:text-base">
-              {email}
-            </span>
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 hidden sm:block">
-              {copied ? (
-                <Check className="w-4 h-4 text-green-500" aria-hidden="true" />
-              ) : (
-                <Copy
-                  className="w-4 h-4 text-gray-400 hover:text-white transition-colors"
-                  aria-hidden="true"
-                />
-              )}
-            </div>
-          </button>
+              <Linkedin className="w-6 h-6 group-hover:scale-110 transition-transform" />
+            </a>
+          )}
+          {profile?.email && (
+            <a
+              href={`mailto:${profile.email}`}
+              className="p-3 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-all duration-300 group hover:shadow-lg"
+              aria-label="Email"
+            >
+              <Mail className="w-6 h-6 group-hover:scale-110 transition-transform" />
+            </a>
+          )}
         </motion.div>
 
+        {/* Scroll Indicator */}
         <motion.div
-          className="grid grid-cols-3 justify-items-center gap-6 mt-8 sm:mt-12 max-w-xs sm:max-w-none mx-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          variants={itemVariants}
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="flex justify-center"
         >
-          <motion.a
-            href="https://github.com/Jayy-develop"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center group w-full"
-            whileHover={{ y: -2 }}
-            aria-label="Visit GitHub profile"
-          >
-            <div className="p-3 rounded-xl transition-colors mb-2 w-full max-w-[200px]">
-              <Github className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-white transition-colors mx-auto" />
-            </div>
-            <motion.div
-              className="flex flex-col items-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-            >
-              <span className="text-base sm:text-lg font-semibold">
-                {displayRepos}
-              </span>
-              <span className="text-xs sm:text-sm text-gray-400">
-                GitHub Projects
-              </span>
-            </motion.div>
-          </motion.a>
-
-          <motion.a
-            href="https://linkedin.com/in/jayapratama"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center group w-full"
-            whileHover={{ y: -2 }}
-            aria-label="Visit LinkedIn profile"
-          >
-            <div className="p-3 rounded-xl transition-colors mb-2 w-full max-w-[200px]">
-              <Linkedin className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-white transition-colors mx-auto" />
-            </div>
-            <motion.div
-              className="flex flex-col items-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-            >
-              <span className="text-base sm:text-lg font-semibold">4000+</span>
-              <span className="text-xs sm:text-sm text-gray-400">
-                LinkedIn Followers
-              </span>
-            </motion.div>
-          </motion.a>
-
-          <motion.a
-            href={`https://wa.me/${whatsappNumber}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center group w-full"
-            whileHover={{ y: -2 }}
-            aria-label="Contact via WhatsApp"
-          >
-            <div className="p-3 rounded-xl transition-colors mb-2 w-full max-w-[200px]">
-              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-white transition-colors mx-auto" />
-            </div>
-            <motion.div
-              className="flex flex-col items-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-            >
-              <span className="text-base sm:text-lg font-semibold">24x7</span>
-              <span className="text-xs sm:text-sm text-gray-400">
-                WhatsApp Me
-              </span>
-            </motion.div>
-          </motion.a>
+          <div className="text-gray-400 text-center text-sm">
+            <p className="mb-2">Scroll to explore</p>
+            <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
         </motion.div>
-      </div>
+
+        {/* Stats Section - Optional */}
+        <motion.div
+          variants={itemVariants}
+          className="mt-20 pt-20 border-t border-white/10 grid grid-cols-3 gap-8 text-center"
+        >
+          <div>
+            <div className="text-2xl sm:text-3xl font-bold text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text">
+              {profile?.stats?.projects || '3'}
+            </div>
+            <p className="text-sm text-gray-400 mt-2">Projects</p>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-bold text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text">
+              {profile?.stats?.internships || '1'}
+            </div>
+            <p className="text-sm text-gray-400 mt-2">Internships</p>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-bold text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text">
+              {profile?.stats?.gpa || '3.75'}
+            </div>
+            <p className="text-sm text-gray-400 mt-2">GPA</p>
+          </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

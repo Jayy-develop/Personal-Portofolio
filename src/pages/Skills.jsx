@@ -1,16 +1,8 @@
-import {
-  Code2,
-  Layout,
-  Server,
-  Database,
-  MessageSquare,
-  Brain,
-  Cloud,
-  Terminal,
-  Wrench,
-  Users,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { Code2, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
+import { getSkills } from "@/services/portfolioApi";
 import {
   JavaScriptLogo,
   ReactLogo,
@@ -36,133 +28,211 @@ import {
   LinuxLogo,
 } from "@/components/TechLogos";
 
-const skills = [
-  {
-    category: "Programming Languages",
-    icon: <Code2 className="w-6 h-6" />,
-    items: [
-      { name: "JavaScript", icon: <JavaScriptLogo /> },
-      { name: "TypeScript", icon: <TypeScriptLogo /> },
-      { name: "Python", icon: <PythonLogo /> },
-      { name: "Bash", icon: <BashLogo /> },
-    ],
-  },
-  {
-    category: "Front-End Development",
-    icon: <Layout className="w-6 h-6" />,
-    items: [
-      { name: "React.js", icon: <ReactLogo /> },
-      { name: "Next.js", icon: <NextjsLogo /> },
-      { name: "Tailwind", icon: <TailwindLogo /> },
-      { name: "Redux", icon: <ReduxLogo /> },
-    ],
-  },
-  {
-    category: "Back-End Development",
-    icon: <Server className="w-6 h-6" />,
-    items: [
-      { name: "Node.js", icon: <NodeLogo /> },
-      { name: "Express", icon: <ExpressLogo /> },
-      { name: "JWT", icon: <JWTLogo /> },
-      { name: "Bcrypt", icon: <BcryptLogo /> },
-    ],
-  },
-  {
-    category: "Databases & Cloud Storage",
-    icon: <Database className="w-6 h-6" />,
-    items: [
-      { name: "MongoDB", icon: <MongoDBLogo /> },
-      { name: "Cloudinary", icon: <Cloud className="w-4 h-4" /> },
-      { name: "AWS", icon: <AWSLogo /> },
-    ],
-  },
-  {
-    category: "Version Control & DevOps",
-    icon: <GitLogo />,
-    items: [
-      { name: "Git", icon: <GitLogo /> },
-      { name: "GitHub", icon: <GitLogo /> },
-      { name: "Vercel", icon: <VercelLogo /> },
-      { name: "Render", icon: <RenderLogo /> },
-    ],
-  },
-  {
-    category: "Tools & Platforms",
-    icon: <Wrench className="w-6 h-6" />,
-    items: [
-      { name: "VS Code", icon: <VSCodeLogo /> },
-      { name: "Git Desktop", icon: <GitLogo /> },
-      { name: "Compass", icon: <MongoDBLogo /> },
-      { name: "Postman", icon: <PostmanLogo /> },
-    ],
-  },
-  {
-    category: "Operating Systems",
-    icon: <Terminal className="w-6 h-6" />,
-    items: [
-      { name: "Windows", icon: <WindowsLogo className="w-4 h-4" /> },
-      { name: "Ubuntu", icon: <UbuntuLogo className="w-4 h-4" /> },
-      { name: "Linux", icon: <LinuxLogo className="w-4 h-4" /> },
-    ],
-  },
-  {
-    category: "Soft Skills",
-    icon: <Brain className="w-6 h-6" />,
-    items: [
-      { name: "Teamwork", icon: <Users className="w-4 h-4" /> },
-      { name: "Communication", icon: <MessageSquare className="w-4 h-4" /> },
-      { name: "Debugging", icon: <Wrench className="w-4 h-4" /> },
-    ],
-  },
-];
+// Map icon names to actual components
+const iconMap = {
+  JavaScriptLogo,
+  ReactLogo,
+  TypeScriptLogo,
+  NodeLogo,
+  MongoDBLogo,
+  VSCodeLogo,
+  GitLogo,
+  TailwindLogo,
+  NextjsLogo,
+  VercelLogo,
+  PythonLogo,
+  ReduxLogo,
+  ExpressLogo,
+  BcryptLogo,
+  JWTLogo,
+  AWSLogo,
+  RenderLogo,
+  PostmanLogo,
+  BashLogo,
+  WindowsLogo,
+  UbuntuLogo,
+  LinuxLogo,
+};
+
+const getCategoryIcon = (iconName) => {
+  return iconMap[iconName] || Code2;
+};
+
+const SkillIcon = ({ iconName, skillName }) => {
+  const IconComponent = iconMap[iconName];
+  
+  if (!IconComponent) {
+    return (
+      <div className="w-8 h-8 flex items-center justify-center">
+        <Code2 className="w-6 h-6 text-blue-400" />
+      </div>
+    );
+  }
+
+  return <IconComponent />;
+};
 
 const Skills = () => {
+  const [skills, setSkills] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const data = await getSkills();
+        setSkills(data || []);
+      } catch (error) {
+        console.error('Failed to fetch skills:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSkills();
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8 },
+    },
+  };
+
   return (
-    <div className="min-h-screen pt-20 px-4 max-w-6xl mx-auto pb-20">
+    <div className="min-h-screen pt-24 px-4 max-w-6xl mx-auto pb-20">
+      {/* Header */}
       <ScrollAnimation>
-        <h2 className="text-4xl font-bold mb-4 gradient-text">
-          Technical Skills
-        </h2>
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-4">
+            <Zap className="w-8 h-8 text-yellow-400" />
+            <h2 className="text-4xl font-bold gradient-text">Skills & Expertise</h2>
+          </div>
+          <p className="text-gray-400 text-lg max-w-3xl">
+            A comprehensive overview of my technical skills and tools I use to build modern web applications.
+          </p>
+        </div>
       </ScrollAnimation>
 
-      <ScrollAnimation>
-        <p className="text-gray-400 mb-12 max-w-2xl">
-          A comprehensive overview of my technical expertise and tools I work
-          with
-        </p>
-      </ScrollAnimation>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {skills.map((skillGroup) => (
-          <ScrollAnimation key={skillGroup.category}>
-            <div className="bg-gray-800/50 p-6 rounded-lg backdrop-blur-sm hover:bg-gray-800/70 transition-all border border-white/5">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="p-2 bg-white/10 rounded-lg">
-                  {skillGroup.icon}
-                </div>
-                <h3 className="text-lg font-semibold">{skillGroup.category}</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {skillGroup.items.map((skill) => (
-                  <div
-                    key={skill.name}
-                    className="bg-gray-700/50 px-4 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-white/10 transition-all group"
-                  >
-                    <div className="text-gray-400 group-hover:text-white transition-colors">
-                      {skill.icon}
-                    </div>
-                    <span className="text-gray-400 group-hover:text-white transition-colors text-sm">
-                      {skill.name}
-                    </span>
+      {/* Skills Grid */}
+      <motion.div
+        className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {loading ? (
+          <div className="col-span-full text-center py-12 text-gray-400">Loading skills...</div>
+        ) : skills.length === 0 ? (
+          <div className="col-span-full text-center py-12 text-gray-400">No skills added yet.</div>
+        ) : (
+          skills.map((category, index) => {
+            const CategoryIcon = categoryIcons[category.icon] || Code2;
+            
+            return (
+            <ScrollAnimation key={category.category}>
+              <motion.div
+                variants={itemVariants}
+                className="group relative bg-gradient-to-br from-gray-900/50 to-black/50 rounded-xl p-6 md:p-8 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10"
+              >
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 group-hover:from-blue-500/40 group-hover:to-purple-500/40 transition-all duration-300">
+                    <CategoryIcon className="w-6 h-6 text-blue-400 group-hover:text-blue-300 transition-colors" />
                   </div>
-                ))}
+                  <h3 className="text-lg font-bold text-white group-hover:text-blue-300 transition-colors">
+                    {category.category}
+                  </h3>
+                </div>
+
+                {/* Skills List */}
+                <div className="space-y-3">
+                  {category.skills.map((skill, idx) => (
+                    <motion.div
+                      key={skill.name}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="group/skill flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
+                    >
+                      <div className="flex-shrink-0">
+                        <SkillIcon iconName={skill.icon} skillName={skill.name} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-300 group-hover/skill:text-white transition-colors truncate">
+                          {skill.name}
+                        </p>
+                        <p className="text-xs text-gray-500">{skill.level}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Hover Glow Effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                </div>
+              </motion.div>
+            </ScrollAnimation>
+          );
+        }))}
+      </motion.div>
+
+      {/* Stats Section */}
+      <ScrollAnimation>
+        <motion.div
+          className="mt-20 pt-20 border-t border-white/10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text mb-2">
+                {skills.length}
               </div>
+              <p className="text-gray-400">Skill Categories</p>
             </div>
-          </ScrollAnimation>
-        ))}
-      </div>
+            <div>
+              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text mb-2">
+                {skills.reduce((acc, cat) => acc + cat.skills.length, 0)}+
+              </div>
+              <p className="text-gray-400">Technologies Mastered</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text mb-2">
+                5+
+              </div>
+              <p className="text-gray-400">Years of Learning</p>
+            </div>
+          </div>
+        </motion.div>
+      </ScrollAnimation>
     </div>
   );
+};
+
+// Category icons mapping
+const categoryIcons = {
+  'Code2': Code2,
+  'Layout': Code2,
+  'Server': Code2,
+  'Database': Code2,
+  'Cloud': Code2,
+  'GitLogo': GitLogo,
+  'Wrench': Code2,
 };
 
 export default Skills;

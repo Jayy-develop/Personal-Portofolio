@@ -1,6 +1,8 @@
 {
-  "name": "niladri_chatterjee_portfolio",
-  "version": "0.1.0",
+  "name": "jaya_pratama_portfolio",
+  "version": "1.0.0",
+  "description": "Jaya Pratama - Full Stack Developer Portfolio",
+  "author": "Jaya Pratama",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.16.1",
     "framer-motion": "^11.0.5",
     "lucide-react": "^0.344.0",
     "ogl": "^1.0.11",
