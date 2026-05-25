@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+<<<<<<< HEAD
 :root {
   color-scheme: dark;
 }
@@ -68,3 +69,26 @@ body {
 	z-index: -1;
 	overflow: hidden;
 }
+=======
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: linear-gradient(to bottom right, #111827, #000000);
+  color: #e5e7eb;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+>>>>>>> 860324800f4424f00784c63bd8f8713db7790ba5
