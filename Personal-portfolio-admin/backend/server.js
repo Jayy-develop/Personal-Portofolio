@@ -20,6 +20,11 @@ app.use('/api/certificates', require('./routes/certificateRoutes'));
 app.use('/api/about', require('./routes/aboutRoutes'));
 app.use('/api/sync', require('./routes/syncRoutes'));
 
+// Root route
+app.get('/', (req, res) => {
+  res.send('🚀 Portfolio Admin Backend API is running successfully!');
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running' });
