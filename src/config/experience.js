@@ -15,4 +15,4 @@ const experience = [
   }
 ];
 
-module.exports = experience;
+export default experience;

@@ -1,31 +1,11 @@
 import { Link } from 'react-router-dom'
 import { Code2, Github, Linkedin, Mail, Phone, Twitter, Instagram } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { getAbout } from '@/services/portfolioApi'
+import { PROFILE } from '@/config/profile'
+import { SOCIAL_LINKS, SOCIAL_INFO } from '@/config/social'
+import { OFFICE_HOURS } from '@/config/contact'
 
 const Footer = () => {
-  const [profile, setProfile] = useState({
-    name: 'Jaya Pratama',
-    title: 'Full Stack Developer',
-    bio: 'Software Developer specializing in Full Stack Development with expertise in modern web technologies.',
-    email: 'jayapenting92@gmail.com',
-    phone: '+6288706497974'
-  })
   const currentYear = new Date().getFullYear()
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const data = await getAbout()
-        if (data) {
-          setProfile(data)
-        }
-      } catch (error) {
-        console.error('Failed to fetch profile:', error)
-      }
-    }
-    fetchProfile()
-  }, [])
 
   const pageLinks = [
     { name: 'Home', path: '/' },
@@ -39,10 +19,10 @@ const Footer = () => {
   ]
 
   const socialIcons = [
-    { icon: Github, url: profile?.socialLinks?.github, label: 'GitHub' },
-    { icon: Linkedin, url: profile?.socialLinks?.linkedin, label: 'LinkedIn' },
-    { icon: Twitter, url: profile?.socialLinks?.twitter, label: 'Twitter' },
-    { icon: Instagram, url: profile?.socialLinks?.instagram, label: 'Instagram' },
+    { icon: Github, url: SOCIAL_LINKS.github, label: 'GitHub' },
+    { icon: Linkedin, url: SOCIAL_LINKS.linkedin, label: 'LinkedIn' },
+    { icon: Twitter, url: SOCIAL_LINKS.twitter, label: 'Twitter' },
+    { icon: Instagram, url: SOCIAL_LINKS.instagram, label: 'Instagram' },
   ].filter(social => social.url)
 
   const column1 = pageLinks.slice(0, 3)
@@ -62,12 +42,12 @@ const Footer = () => {
                 <Code2 className="w-6 h-6 text-white" aria-hidden="true" />
               </div>
               <div>
-                <span className="text-lg font-bold text-white block">{profile?.name || 'Jaya Pratama'}</span>
-                <span className="text-xs text-gray-400">{profile?.title || 'Full Stack Developer'}</span>
+                <span className="text-lg font-bold text-white block">{PROFILE.name}</span>
+                <span className="text-xs text-gray-400">{PROFILE.title}</span>
               </div>
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed">
-              {profile?.bio || 'Software Developer specializing in Full Stack Development with expertise in modern web technologies.'}
+              {PROFILE.bio}
             </p>
             <div className="flex space-x-3 pt-2">
               {socialIcons.map((social) => {
@@ -134,22 +114,22 @@ const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <a
-                  href={`mailto:${profile?.email}`}
+                  href={`mailto:${PROFILE.email}`}
                   className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
-                  aria-label={`Email ${profile?.name}`}
+                  aria-label={`Email ${PROFILE.name}`}
                 >
                   <Mail className="w-4 h-4 group-hover:scale-110 transition-transform" aria-hidden="true" />
-                  {profile?.email}
+                  {PROFILE.email}
                 </a>
               </li>
               <li>
                 <a
-                  href={`tel:${profile?.phone}`}
+                  href={`tel:${PROFILE.phone}`}
                   className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
-                  aria-label={`Call ${profile?.name}`}
+                  aria-label={`Call ${PROFILE.name}`}
                 >
                   <Phone className="w-4 h-4 group-hover:scale-110 transition-transform" aria-hidden="true" />
-                  {profile?.phone}
+                  {PROFILE.phone}
                 </a>
               </li>
             </ul>
@@ -159,9 +139,9 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Hours</h3>
             <div className="space-y-2 text-gray-400 text-sm">
-              <p>{profile?.officeHours?.weekday || 'Monday - Friday: 9:00 AM - 6:00 PM (WIB)'}</p>
-              <p>{profile?.officeHours?.saturday || 'Saturday: 10:00 AM - 2:00 PM (WIB)'}</p>
-              <p className="text-xs text-gray-500">{profile?.officeHours?.sunday || 'Sunday: Available for urgent matters'}</p>
+              <p>{OFFICE_HOURS.weekday}</p>
+              <p>{OFFICE_HOURS.saturday}</p>
+              <p className="text-xs text-gray-500">{OFFICE_HOURS.sunday}</p>
             </div>
           </div>
         </div>
@@ -169,10 +149,10 @@ const Footer = () => {
         {/* Copyright */}
         <div className="py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-gray-400">
-            © {currentYear} <span className="font-semibold text-white">{profile?.name || 'Jaya Pratama'}</span>. All rights reserved.
+            © {currentYear} <span className="font-semibold text-white">{PROFILE.name}</span>. All rights reserved.
           </p>
           <p className="text-sm text-gray-500">
-            Designed & Built with <span className="text-red-500">❤️</span> by {profile?.name || 'Jaya Pratama'}
+            Designed & Built with <span className="text-red-500">❤️</span> by {PROFILE.name}
           </p>
         </div>
       </div>

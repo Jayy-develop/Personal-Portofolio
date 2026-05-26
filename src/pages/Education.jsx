@@ -1,27 +1,10 @@
 import { motion } from 'framer-motion'
 import { GraduationCap, Calendar, MapPin, BookOpen, Award, FileText, ExternalLink, Sparkles } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { ScrollAnimation } from '@/components/ScrollAnimation'
-import { getEducation } from '@/services/portfolioApi'
+import localEducation from '@/config/education'
 
 const Education = () => {
-  const [education, setEducation] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchEducation = async () => {
-      try {
-        const data = await getEducation()
-        setEducation(data || [])
-      } catch (error) {
-        console.error('Failed to fetch education:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    
-    fetchEducation()
-  }, [])
+  const education = localEducation || []
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -64,11 +47,7 @@ const Education = () => {
         initial="hidden"
         animate="visible"
       >
-        {loading ? (
-          <div className="text-center py-20">
-            <p className="text-gray-400 text-lg">Loading education...</p>
-          </div>
-        ) : education.length === 0 ? (
+        {education.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-gray-400 text-lg">No education records yet.</p>
           </div>
@@ -148,7 +127,7 @@ const Education = () => {
       </motion.div>
 
       {/* Stats */}
-      {!loading && education.length > 0 && (
+      {education.length > 0 && (
         <ScrollAnimation>
           <motion.div
             className="mt-20 pt-20 border-t border-white/10"
@@ -162,23 +141,23 @@ const Education = () => {
                 <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text mb-2">
                   {education.length}
                 </div>
-              <p className="text-gray-400">Educational Institutions</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text mb-2">
-                4+
+                <p className="text-gray-400">Educational Institutions</p>
               </div>
-              <p className="text-gray-400">Years of Study</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text mb-2">
-                100%
+              <div>
+                <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text mb-2">
+                  4+
+                </div>
+                <p className="text-gray-400">Years of Study</p>
               </div>
-              <p className="text-gray-400">Academic Excellence</p>
+              <div>
+                <div className="text-3xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text mb-2">
+                  100%
+                </div>
+                <p className="text-gray-400">Academic Excellence</p>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      </ScrollAnimation>
+          </motion.div>
+        </ScrollAnimation>
       )}
     </div>
   )

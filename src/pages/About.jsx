@@ -1,30 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { Code2, Briefcase, GraduationCap, Globe, Sparkles, ArrowRight } from "lucide-react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
-import { getAbout } from "@/services/portfolioApi";
+import { PROFILE, BIOS } from "@/config/profile";
 import profileImg from "@/assets/profile/Fotojaya.jpeg";
 import cvPdf from "@/assets/files/cv_pdf/CV Jaya Pratama.pdf";
 
 const About = () => {
-  const [about, setAbout] = useState({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAbout = async () => {
-      try {
-        const data = await getAbout();
-        setAbout(data || {});
-      } catch (error) {
-        console.error('Failed to fetch about:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAbout();
-  }, []);
-
   const achievements = [
     {
       icon: <Code2 className="w-6 h-6" />,
@@ -107,7 +89,7 @@ const About = () => {
             {/* Bio */}
             <div className="space-y-4">
               <p className="text-gray-300 leading-relaxed text-lg">
-                {loading ? 'Loading about...' : (about.bio_long || about.bio_short || 'A passionate developer building the future, one line of code at a time.')}
+                {BIOS.long}
               </p>
             </div>
 
@@ -116,10 +98,10 @@ const About = () => {
               <h3 className="text-lg font-semibold mb-4">Quick Facts</h3>
               <div className="space-y-2">
                 {[
-                  { label: "Location", value: about.location || '—' },
-                  { label: "Timezone", value: about.timezone || '—' },
-                  { label: "Email", value: about.email ? `${about.email.split('@')[0]}...` : '—' },
-                  { label: "Phone", value: about.phone || '—' },
+                  { label: "Location", value: PROFILE.location },
+                  { label: "Timezone", value: PROFILE.timezone },
+                  { label: "Email", value: PROFILE.email.split('@')[0] + '...' },
+                  { label: "Phone", value: PROFILE.phone },
                 ].map((fact, idx) => (
                   <motion.div
                     key={idx}

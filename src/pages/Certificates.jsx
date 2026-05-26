@@ -1,27 +1,12 @@
 import { motion } from "framer-motion";
 import { Award, Calendar, ExternalLink, Filter } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
-import { getCertificates } from "@/services/portfolioApi";
+import localCertificates from "@/config/certificates";
 
 const Certificates = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [certificates, setCertificates] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchCertificates = async () => {
-      try {
-        const data = await getCertificates();
-        setCertificates(data || []);
-      } catch (error) {
-        console.error('Failed to fetch certificates:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCertificates();
-  }, []);
+  const certificates = localCertificates || [];
 
   const categories = [...new Set(certificates.map(c => c.issuer))];
 
@@ -107,9 +92,7 @@ const Certificates = () => {
         initial="hidden"
         animate="visible"
       >
-        {loading ? (
-          <div className="col-span-full text-center py-12 text-gray-400">Loading certificates...</div>
-        ) : filteredCertificates.map((cert, index) => (
+        {filteredCertificates.map((cert, index) => (
           <ScrollAnimation key={cert.id}>
             <motion.div
               variants={itemVariants}
@@ -169,7 +152,7 @@ const Certificates = () => {
       </motion.div>
 
       {/* Empty State */}
-      {!loading && filteredCertificates.length === 0 && (
+      {filteredCertificates.length === 0 && (
         <ScrollAnimation>
           <div className="text-center py-20">
             <Award className="w-16 h-16 mx-auto text-gray-600 mb-4" />

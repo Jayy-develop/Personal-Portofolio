@@ -1,27 +1,10 @@
 import { motion } from "framer-motion";
 import { Github, ExternalLink, Code2 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
-import { getProjects } from "@/services/portfolioApi";
+import localProjects from "@/config/projects";
 
 const Projects = () => {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const data = await getProjects();
-        setProjects(data || []);
-      } catch (error) {
-        console.error('Failed to fetch projects:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchProjects();
-  }, []);
+  const projects = localProjects || [];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -59,7 +42,7 @@ const Projects = () => {
       {projects.length === 0 ? (
         <ScrollAnimation>
           <div className="text-center py-20">
-            <p className="text-gray-400 text-lg">{loading ? 'Loading projects...' : 'No projects yet. Check back soon!'}</p>
+            <p className="text-gray-400 text-lg">No projects yet. Check back soon!</p>
           </div>
         </ScrollAnimation>
       ) : (

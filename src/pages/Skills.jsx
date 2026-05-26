@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { Code2, Zap } from "lucide-react";
-import { useEffect, useState } from "react";
 import { ScrollAnimation } from "@/components/ScrollAnimation";
-import { getSkills } from "@/services/portfolioApi";
+import localSkills from "@/config/skills";
 import {
   JavaScriptLogo,
   ReactLogo,
@@ -54,8 +53,15 @@ const iconMap = {
   LinuxLogo,
 };
 
-const getCategoryIcon = (iconName) => {
-  return iconMap[iconName] || Code2;
+// Category icons mapping
+const categoryIcons = {
+  'Code2': Code2,
+  'Layout': Code2,
+  'Server': Code2,
+  'Database': Code2,
+  'Cloud': Code2,
+  'GitLogo': GitLogo,
+  'Wrench': Code2,
 };
 
 const SkillIcon = ({ iconName, skillName }) => {
@@ -73,22 +79,7 @@ const SkillIcon = ({ iconName, skillName }) => {
 };
 
 const Skills = () => {
-  const [skills, setSkills] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const data = await getSkills();
-        setSkills(data || []);
-      } catch (error) {
-        console.error('Failed to fetch skills:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSkills();
-  }, []);
+  const skills = localSkills || [];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -131,9 +122,7 @@ const Skills = () => {
         initial="hidden"
         animate="visible"
       >
-        {loading ? (
-          <div className="col-span-full text-center py-12 text-gray-400">Loading skills...</div>
-        ) : skills.length === 0 ? (
+        {skills.length === 0 ? (
           <div className="col-span-full text-center py-12 text-gray-400">No skills added yet.</div>
         ) : (
           skills.map((category, index) => {
@@ -222,17 +211,6 @@ const Skills = () => {
       </ScrollAnimation>
     </div>
   );
-};
-
-// Category icons mapping
-const categoryIcons = {
-  'Code2': Code2,
-  'Layout': Code2,
-  'Server': Code2,
-  'Database': Code2,
-  'Cloud': Code2,
-  'GitLogo': GitLogo,
-  'Wrench': Code2,
 };
 
 export default Skills;

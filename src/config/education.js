@@ -15,4 +15,4 @@ const education = [
   }
 ];
 
-module.exports = education;
+export default education;

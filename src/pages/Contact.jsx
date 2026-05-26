@@ -1,46 +1,25 @@
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Github, Linkedin, MessageCircle, Send, MessageSquare, Zap, Instagram, Twitter } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { getAbout } from '@/services/portfolioApi'
+import { useState } from 'react'
+import { PROFILE } from '@/config/profile'
+import { SOCIAL_LINKS } from '@/config/social'
+import { CONTACT_INFO, OFFICE_HOURS } from '@/config/contact'
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState('idle') // 'idle' | 'success' | 'error'
-  const [profile, setProfile] = useState({})
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const data = await getAbout()
-        setProfile(data || {})
-      } catch (error) {
-        console.error('Failed to fetch profile:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchProfile()
-  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
-      if (response.ok) {
-        setSubmitStatus('success')
-        setFormData({ name: '', email: '', subject: '', message: '' })
-      } else {
-        setSubmitStatus('error')
-      }
+      // Open mailto link as fallback since Formspree isn't configured
+      const mailtoLink = `mailto:${CONTACT_INFO.email}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`From: ${formData.name} (${formData.email})\n\n${formData.message}`)}`
+      window.open(mailtoLink, '_blank')
+      setSubmitStatus('success')
+      setFormData({ name: '', email: '', subject: '', message: '' })
     } catch (error) {
       console.error('Error:', error)
       setSubmitStatus('error')
@@ -50,17 +29,17 @@ const Contact = () => {
   }
 
   const contactInfo = [
-    { icon: <Mail className="w-5 h-5" />, label: 'Email', value: profile?.email || 'jayapenting92@gmail.com', link: `mailto:${profile?.email || 'jayapenting92@gmail.com'}` },
-    { icon: <Phone className="w-5 h-5" />, label: 'Phone', value: profile?.phone || '+6288706497974', link: `tel:${profile?.phone || '+6288706497974'}` },
-    { icon: <MapPin className="w-5 h-5" />, label: 'Location', value: profile?.location || 'Indonesia' },
-    { icon: <Zap className="w-5 h-5" />, label: 'Time Zone', value: profile?.timezone || 'WIB (UTC+7)' },
+    { icon: <Mail className="w-5 h-5" />, label: 'Email', value: CONTACT_INFO.email, link: `mailto:${CONTACT_INFO.email}` },
+    { icon: <Phone className="w-5 h-5" />, label: 'Phone', value: CONTACT_INFO.phone, link: `tel:${CONTACT_INFO.phone}` },
+    { icon: <MapPin className="w-5 h-5" />, label: 'Location', value: CONTACT_INFO.location },
+    { icon: <Zap className="w-5 h-5" />, label: 'Time Zone', value: CONTACT_INFO.timezone },
   ]
 
   const socialLinks = [
-    { icon: Github, label: 'GitHub', link: profile?.socialLinks?.github },
-    { icon: Linkedin, label: 'LinkedIn', link: profile?.socialLinks?.linkedin },
-    { icon: Twitter, label: 'Twitter', link: profile?.socialLinks?.twitter },
-    { icon: Instagram, label: 'Instagram', link: profile?.socialLinks?.instagram },
+    { icon: Github, label: 'GitHub', link: SOCIAL_LINKS.github },
+    { icon: Linkedin, label: 'LinkedIn', link: SOCIAL_LINKS.linkedin },
+    { icon: Twitter, label: 'Twitter', link: SOCIAL_LINKS.twitter },
+    { icon: Instagram, label: 'Instagram', link: SOCIAL_LINKS.instagram },
   ].filter(link => link.link)
 
   return (
@@ -157,9 +136,9 @@ const Contact = () => {
             >
               <h3 className="text-lg md:text-xl font-semibold mb-4">Office Hours</h3>
               <div className="space-y-2 text-gray-400 text-sm md:text-base">
-                <p>{profile?.officeHours?.weekday || 'Monday - Friday: 9:00 AM - 6:00 PM (WIB)'}</p>
-                <p>{profile?.officeHours?.saturday || 'Saturday: 10:00 AM - 2:00 PM (WIB)'}</p>
-                <p className="text-xs md:text-sm text-gray-500">{profile?.officeHours?.sunday || 'Sunday: Available for urgent matters'}</p>
+                <p>{OFFICE_HOURS.weekday}</p>
+                <p>{OFFICE_HOURS.saturday}</p>
+                <p className="text-xs md:text-sm text-gray-500">{OFFICE_HOURS.sunday}</p>
               </div>
             </motion.div>
           </div>

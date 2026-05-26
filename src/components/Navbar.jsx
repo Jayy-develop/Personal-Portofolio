@@ -1,28 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Code2, Menu, X } from 'lucide-react'
 import SearchDialog from './SearchDialog'
-import { getAbout } from '@/services/portfolioApi'
+import { PROFILE } from '@/config/profile'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [profile, setProfile] = useState({ name: 'Jaya Pratama' })
   const location = useLocation()
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const data = await getAbout()
-        if (data?.name) {
-          setProfile(data)
-        }
-      } catch (error) {
-        console.error('Failed to fetch profile:', error)
-      }
-    }
-    fetchProfile()
-  }, [])
 
   const navLinks = [
     { path: '/', label: 'Home' },
@@ -59,7 +44,7 @@ const Navbar = () => {
                 <Code2 className="w-6 h-6 text-white" aria-hidden="true" />
               </div>
               <span className="text-lg font-bold text-white hidden sm:inline">
-                {profile?.name?.split(' ')[0] || 'Jaya'}
+                {PROFILE.name.split(' ')[0]}
               </span>
             </Link>
 
