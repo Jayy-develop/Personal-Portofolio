@@ -8,7 +8,7 @@ export const SOCIAL_LINKS = {
   twitter: '',
   instagram: 'https://www.instagram.com/jay_prtma/',
   email: 'jayapenting92@gmail.com',
-  whatsapp: 'https://wa.me/+6288706497974',
+  whatsapp: 'https://api.whatsapp.com/send?phone=6288706497974',
   cv: '/files/CV_Jaya_Pratama.pdf', // Update this path to your CV
 };
 
@@ -33,5 +33,12 @@ export const SOCIAL_INFO = [
     url: SOCIAL_LINKS.instagram,
     label: 'Instagram Profile',
     color: 'hover:text-pink-400',
+  },
+  {
+    name: 'WhatsApp',
+    icon: 'MessageCircle',
+    url: SOCIAL_LINKS.whatsapp,
+    label: 'WhatsApp Chat',
+    color: 'hover:text-green-400',
   },
 ];

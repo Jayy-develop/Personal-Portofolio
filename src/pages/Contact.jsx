@@ -39,6 +39,7 @@ const Contact = () => {
     { icon: Github, label: 'GitHub', link: SOCIAL_LINKS.github },
     { icon: Linkedin, label: 'LinkedIn', link: SOCIAL_LINKS.linkedin },
     { icon: Instagram, label: 'Instagram', link: SOCIAL_LINKS.instagram },
+    { icon: MessageCircle, label: 'WhatsApp', link: SOCIAL_LINKS.whatsapp },
   ].filter(link => link.link)
 
   return (
