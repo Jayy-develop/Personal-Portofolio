@@ -2,8 +2,8 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 require('dotenv').config();
 
-// Use sqlite file in the backend directory
-const dbPath = path.join(__dirname, '..', 'portfolio.db');
+// Use SQLite file path from environment variables if specified (for persistent volumes like Railway), otherwise fall back to local backend directory
+const dbPath = process.env.SQLITE_DB_PATH || path.join(__dirname, '..', 'portfolio.db');
 
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
