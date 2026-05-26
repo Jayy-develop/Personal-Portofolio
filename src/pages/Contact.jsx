@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Mail, Phone, MapPin, Github, Linkedin, MessageCircle, Send, MessageSquare, Zap, Instagram, Twitter } from 'lucide-react'
+import { Mail, Phone, MapPin, Github, Linkedin, MessageCircle, Send, MessageSquare, Zap, Instagram } from 'lucide-react'
 import { useState } from 'react'
 import { PROFILE } from '@/config/profile'
 import { SOCIAL_LINKS } from '@/config/social'
@@ -38,7 +38,6 @@ const Contact = () => {
   const socialLinks = [
     { icon: Github, label: 'GitHub', link: SOCIAL_LINKS.github },
     { icon: Linkedin, label: 'LinkedIn', link: SOCIAL_LINKS.linkedin },
-    { icon: Twitter, label: 'Twitter', link: SOCIAL_LINKS.twitter },
     { icon: Instagram, label: 'Instagram', link: SOCIAL_LINKS.instagram },
   ].filter(link => link.link)
 

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Code2, Github, Linkedin, Mail, Phone, Twitter, Instagram } from 'lucide-react'
+import { Code2, Github, Linkedin, Mail, Phone, Instagram } from 'lucide-react'
 import { PROFILE } from '@/config/profile'
 import { SOCIAL_LINKS, SOCIAL_INFO } from '@/config/social'
 import { OFFICE_HOURS } from '@/config/contact'
@@ -21,7 +21,6 @@ const Footer = () => {
   const socialIcons = [
     { icon: Github, url: SOCIAL_LINKS.github, label: 'GitHub' },
     { icon: Linkedin, url: SOCIAL_LINKS.linkedin, label: 'LinkedIn' },
-    { icon: Twitter, url: SOCIAL_LINKS.twitter, label: 'Twitter' },
     { icon: Instagram, url: SOCIAL_LINKS.instagram, label: 'Instagram' },
   ].filter(social => social.url)
 

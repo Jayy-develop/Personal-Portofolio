@@ -5,8 +5,8 @@
 export const SOCIAL_LINKS = {
   github: 'https://github.com/Jayy-develop',
   linkedin: 'https://linkedin.com/in/jayapratama',
-  twitter: 'https://twitter.com/jayapratama',
-  instagram: 'https://instagram.com/jayapratama',
+  twitter: '',
+  instagram: 'https://www.instagram.com/jay_prtma/',
   email: 'jayapenting92@gmail.com',
   whatsapp: 'https://wa.me/+6288706497974',
   cv: '/files/CV_Jaya_Pratama.pdf', // Update this path to your CV
@@ -26,13 +26,6 @@ export const SOCIAL_INFO = [
     url: SOCIAL_LINKS.linkedin,
     label: 'LinkedIn Profile',
     color: 'hover:text-blue-400',
-  },
-  {
-    name: 'Twitter',
-    icon: 'Twitter',
-    url: SOCIAL_LINKS.twitter,
-    label: 'Twitter Profile',
-    color: 'hover:text-sky-400',
   },
   {
     name: 'Instagram',
