@@ -5,7 +5,6 @@
 /* stylelint-disable-next-line at-rule-no-unknown */
 @tailwind utilities;
 
-<<<<<<< HEAD
 :root {
   color-scheme: dark;
 }
@@ -62,7 +61,6 @@ body {
   cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'></path><rect x='8' y='2' width='8' height='4' rx='1' ry='1'></rect></svg>") 12 12, pointer;
 }
 
-
 .light-rays-container {
 	position: absolute;
 	inset: 0;
@@ -72,27 +70,3 @@ body {
 	z-index: -1;
 	overflow: hidden;
 }
-=======
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: linear-gradient(to bottom right, #111827, #000000);
-  color: #e5e7eb;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type=number] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
->>>>>>> 860324800f4424f00784c63bd8f8713db7790ba5
