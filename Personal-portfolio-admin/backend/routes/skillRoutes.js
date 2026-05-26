@@ -1,27 +1,15 @@
-import express from 'express';
-import sqlite3 from 'sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const dbPath = path.join(__dirname, '../portfolio.db');
-const db = new sqlite3.Database(dbPath);
-
+const express = require('express');
 const router = express.Router();
+const skillController = require('../controllers/skillController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.get('/', (req, res) => {
-  db.all('SELECT * FROM skills ORDER BY category', (err, rows) => {
-    res.json(rows || []);
-  });
-});
+// Public routes
+router.get('/', skillController.getAllSkills);
+router.get('/:id', skillController.getSkillById);
 
-router.post('/', (req, res) => {
-  const { name, category, proficiency } = req.body;
-  db.run('INSERT INTO skills (name, category, proficiency) VALUES (?, ?, ?)',
-    [name, category, proficiency], (err) => {
-      res.json({ message: 'Skill added' });
-    });
-});
+// Protected routes
+router.post('/', authMiddleware, skillController.createSkill);
+router.put('/:id', authMiddleware, skillController.updateSkill);
+router.delete('/:id', authMiddleware, skillController.deleteSkill);
 
-export default router;
+module.exports = router;

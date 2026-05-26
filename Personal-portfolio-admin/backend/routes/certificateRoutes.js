@@ -1,27 +1,15 @@
-import express from 'express';
-import sqlite3 from 'sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const dbPath = path.join(__dirname, '../portfolio.db');
-const db = new sqlite3.Database(dbPath);
-
+const express = require('express');
 const router = express.Router();
+const certificateController = require('../controllers/certificateController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.get('/', (req, res) => {
-  db.all('SELECT * FROM certificates ORDER BY created_at DESC', (err, rows) => {
-    res.json(rows || []);
-  });
-});
+// Public routes
+router.get('/', certificateController.getAllCertificates);
+router.get('/:id', certificateController.getCertificateById);
 
-router.post('/', (req, res) => {
-  const { title, issuer, date, description, link, image } = req.body;
-  db.run('INSERT INTO certificates (title, issuer, date, description, link, image) VALUES (?, ?, ?, ?, ?, ?)',
-    [title, issuer, date, description, link, image], (err) => {
-      res.json({ message: 'Certificate added' });
-    });
-});
+// Protected routes
+router.post('/', authMiddleware, certificateController.createCertificate);
+router.put('/:id', authMiddleware, certificateController.updateCertificate);
+router.delete('/:id', authMiddleware, certificateController.deleteCertificate);
 
-export default router;
+module.exports = router;

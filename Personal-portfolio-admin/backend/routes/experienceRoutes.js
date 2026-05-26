@@ -1,27 +1,15 @@
-import express from 'express';
-import sqlite3 from 'sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const dbPath = path.join(__dirname, '../portfolio.db');
-const db = new sqlite3.Database(dbPath);
-
+const express = require('express');
 const router = express.Router();
+const experienceController = require('../controllers/experienceController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.get('/', (req, res) => {
-  db.all('SELECT * FROM experience ORDER BY created_at DESC', (err, rows) => {
-    res.json(rows || []);
-  });
-});
+// Public routes
+router.get('/', experienceController.getAllExperience);
+router.get('/:id', experienceController.getExperienceById);
 
-router.post('/', (req, res) => {
-  const { company, position, startDate, endDate, description, technologies } = req.body;
-  db.run('INSERT INTO experience (company, position, startDate, endDate, description, technologies) VALUES (?, ?, ?, ?, ?, ?)',
-    [company, position, startDate, endDate, description, technologies], (err) => {
-      res.json({ message: 'Experience added' });
-    });
-});
+// Protected routes
+router.post('/', authMiddleware, experienceController.createExperience);
+router.put('/:id', authMiddleware, experienceController.updateExperience);
+router.delete('/:id', authMiddleware, experienceController.deleteExperience);
 
-export default router;
+module.exports = router;
