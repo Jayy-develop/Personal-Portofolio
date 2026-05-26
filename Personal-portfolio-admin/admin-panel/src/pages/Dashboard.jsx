@@ -32,7 +32,8 @@ export default function Dashboard() {
     setSyncing(true);
     setSyncMessage('');
     try {
-      const response = await fetch('http://localhost:5000/api/sync/portfolio', {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${baseUrl}/sync/portfolio`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
