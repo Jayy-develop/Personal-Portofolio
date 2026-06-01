@@ -7,7 +7,7 @@ const projects = [
     "title": "KIYAY Goldfish Management System",
     "description": "A PHP-based management information system for goldfish business operations and administration.",
     "longDescription": "KIYAY Goldfish Management System is a web-based application developed using PHP and MySQL to manage goldfish business operations efficiently. The system includes admin dashboards, authentication systems, data management, and operational monitoring features designed to simplify business workflows. Built with structured folder architecture and responsive web interfaces, the platform focuses on usability, performance, and effective data management for modern aquaculture businesses.",
-    "image": "",
+    "image": "https://sistem-manajemen-kiyay-goldfish-lampung-production.up.railway.app/assets/img/logo.jpg",
     "tags": [
       "PHP",
       "MySQL",
