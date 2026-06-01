@@ -3,6 +3,17 @@
 
 const experience = [
   {
+    "id": 2,
+    "title": "WiFi / Network Technician",
+    "company": "PT. Megarap Mitra Solusi",
+    "description": "• Installed and configured WiFi networks for homes, offices, and small businesses, including cable installation, router setup, and access point deployment.\n• Configured network settings such as IP addressing, DHCP, SSID, and WiFi security (password protection and encryption).\n• Performed troubleshooting and repairs for network issues, including slow connections, intermittent signal loss, and device connectivity problems.\n• Conducted regular network maintenance to ensure stable and optimal internet performance.\n• Provided technical support and basic training to users on safe and efficient network usage.\n• Coordinated with Internet Service Providers (ISPs) during installations and technical issue resolution.",
+    "image": "",
+    "duration": "Aug 2023 - Feb 2024",
+    "location": "Pringsewu",
+    "created_at": "2026-06-01 10:21:52",
+    "updated_at": "2026-06-01 10:21:52"
+  },
+  {
     "id": 1,
     "title": "Full Stack Web Developer",
     "company": "Freelance & Personal Projects",

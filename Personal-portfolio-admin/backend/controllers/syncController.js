@@ -35,7 +35,7 @@ exports.syncToPortfolio = async (req, res) => {
     };
 
     // Portfolio config paths
-    const portfolioConfigDir = path.join(__dirname, '..', '..', '..', 'Personal-portfolio', 'src', 'config');
+    const portfolioConfigDir = path.join(__dirname, '..', '..', '..', 'src', 'config');
 
     // Create config files for each category
     if (!fs.existsSync(portfolioConfigDir)) {
@@ -90,5 +90,5 @@ exports.syncToPortfolio = async (req, res) => {
 
 // Helper function to generate config file content
 function generateConfigFile(name, data) {
-  return `// Auto-generated from admin panel\n// Do not edit manually - changes will be lost on next sync\n\nconst ${name} = ${JSON.stringify(data, null, 2)};\n\nmodule.exports = ${name};\n`;
+  return `// Auto-generated from admin panel\n// Do not edit manually - changes will be lost on next sync\n\nconst ${name} = ${JSON.stringify(data, null, 2)};\n\nexport default ${name};\n`;
 }
