@@ -6,7 +6,7 @@ const certificates = [
     "id": 1,
     "title": "Introduction to Information Security",
     "issuer": "Cyber Academy Indonesia",
-    "image": "https://www.cyberacademy.id/certificate/PKMI01103250581",
+    "image": "https://cda-publish.s3.ap-southeast-1.amazonaws.com/badge/course_thumbnail_1652348485.png",
     "credential_url": "https://www.cyberacademy.id/certificate/PKMI01103250581",
     "issued_date": "08 Maret 2025",
     "created_at": "2026-06-01 10:31:03",

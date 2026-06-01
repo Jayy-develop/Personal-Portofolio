@@ -1,7 +1,26 @@
+import projects from './projects';
+import experience from './experience';
+import certificates from './certificates';
+
 /**
  * Centralized profile configuration
  * Update this file to customize your portfolio branding
  */
+
+const yearsExperience = (() => {
+  const years = experience
+    .map(item => (item.duration || '').match(/\d{4}/g) || [])
+    .flat()
+    .map(Number)
+    .filter(Boolean);
+
+  if (!years.length) return '0+';
+
+  const startYear = Math.min(...years);
+  const currentYear = new Date().getFullYear();
+  const diff = Math.max(currentYear - startYear + 1, 1);
+  return `${diff}+`;
+})();
 
 export const PROFILE = {
   name: 'Jaya Pratama',
@@ -28,8 +47,10 @@ export const PROFILE = {
   
   // Stats
   stats: {
-    projects: '10+',
-    internships: '3+',
+    projects: `${projects.length}+`,
+    experienceYears: yearsExperience,
+    internships: `${experience.length}+`,
+    certifications: `${certificates.length}+`,
     gpa: '3.75',
   },
   

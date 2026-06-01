@@ -10,17 +10,17 @@ const About = () => {
   const achievements = [
     {
       icon: <Code2 className="w-6 h-6" />,
-      title: "15+",
+      title: PROFILE.stats.projects,
       description: "Projects Completed",
     },
     {
       icon: <Briefcase className="w-6 h-6" />,
-      title: "3+",
+      title: PROFILE.stats.experienceYears,
       description: "Years Experience",
     },
     {
       icon: <GraduationCap className="w-6 h-6" />,
-      title: "10+",
+      title: PROFILE.stats.certifications,
       description: "Certifications",
     },
   ];
